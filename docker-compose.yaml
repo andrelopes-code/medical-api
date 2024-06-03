@@ -1,0 +1,29 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.dockerfile
+    ports:
+    - "8000:8000"
+    - "5678:5678"
+    volumes:
+      - ./app:/home/app/api
+    environment:
+      - API_POSTGRES_URI=postgresql+asyncpg://postgres:postgres@postgres:5432/medical
+    depends_on:
+      - postgres
+    stdin_open: true
+    tty: true
+
+  postgres:
+    build:
+      context: .
+      dockerfile: docker/postgres.dockerfile
+    ports:
+    - "5432:5432"
+    volumes:
+      - $HOME/.postgres/medical/data/postgresql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DBS=medical, medical_test
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres

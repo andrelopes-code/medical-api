@@ -1,0 +1,87 @@
+[tool.poetry]
+name = "medical-appointments"
+version = "0.1.0"
+description = "sistema de gerenciamento de consultas médicas"
+authors = ["André Lopes <andrelopes.code@gmail.com>"]
+readme = "README.md"
+packages = [
+    { include = "app" },
+]
+include = ["app/**/*"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["all"], version = "^0.111.0"}
+email-validator = "^2.1.1"
+sqlmodel = "^0.0.18"
+pydantic = "^2.7.2"
+jose = "^1.0.0"
+alembic = "^1.13.1"
+dynaconf = "^3.2.5"
+
+
+[tool.poetry.group.dev.dependencies]
+debugpy = "^1.8.1"
+pytest = "^8.2.1"
+black = "^24.4.2"
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = 'tests'
+xfail_strict = true
+filterwarnings = [
+    'error',
+    'ignore:path is deprecated.*:DeprecationWarning:',
+]
+
+[tool.black]
+color = true
+line-length = 100
+target-version = ['py312']
+skip-string-normalization = true
+
+[tool.isort]
+line_length = 100
+known_first_party = 'app'
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+
+[tool.flake8]
+# Configurações do Flake8
+max-line-length = 100
+exclude = ".git, __pycache__, .venv, .eggs, *.egg, migrations, xpto"
+
+[tool.mypy]
+# temporarily ignore some files
+# exclude = 'foo/(zaz|bar)\.py'
+python_version = '3.12'
+show_error_codes = true
+follow_imports = 'silent'
+strict_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+warn_unused_configs = true
+disallow_subclassing_any = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+
+[tool.pyright]
+ignore = [
+    "**/__pycache__",
+    "**/node_modules",
+    "**/.venv",
+    "**/.eggs",
+    "**/*.egg",
+    "**/migrations",
+]
