@@ -13,8 +13,6 @@ settings = Dynaconf(
     load_dotenv=False,
 )
 
-# Ensure that secret key is set
-settings.validators.register(
-    Validator('security.SECRET_KEY', must_exist=True)
-)
+# Ensures that the secret key is set
+settings.validators.register(Validator('security.SECRET_KEY', must_exist=True))
 settings.validators.validate()

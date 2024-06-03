@@ -16,7 +16,7 @@ COPY . .
 # Instala as dependências do projeto com o Poetry
 RUN pip install poetry && \
     python -m poetry config virtualenvs.create false && \
-    python -m poetry install
+    poetry install
 
 # --without=dev
 

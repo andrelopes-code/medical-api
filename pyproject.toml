@@ -3,7 +3,7 @@ name = "medical-appointments"
 version = "0.1.0"
 description = "sistema de gerenciamento de consultas médicas"
 authors = ["André Lopes <andrelopes.code@gmail.com>"]
-readme = "README.md"
+readme = "docs/README.md"
 packages = [
     { include = "app" },
 ]
@@ -13,11 +13,15 @@ include = ["app/**/*"]
 python = "^3.12"
 fastapi = {extras = ["all"], version = "^0.111.0"}
 email-validator = "^2.1.1"
-sqlmodel = "^0.0.18"
+sqlmodel = {extras = ["asyncio"], version = "^0.0.18"}
 pydantic = "^2.7.2"
-jose = "^1.0.0"
 alembic = "^1.13.1"
 dynaconf = "^3.2.5"
+asyncpg = "^0.29.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+pyjwt = "^2.8.0"
+pwdlib = {extras = ["argon2"], version = "^0.2.0"}
+loguru = "^0.7.2"
 
 
 [tool.poetry.group.dev.dependencies]
