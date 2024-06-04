@@ -16,7 +16,7 @@ class User(SQLModel, table=True):
     email: EmailStr = Field(nullable=False, unique=True, index=True, sa_type=VARCHAR(255))
     gender: UserGender = Field(nullable=False)
     birthdate: datetime
-    user_type: Optional[UserType]
+    user_type: UserType
     created_at: datetime = Field(default_factory=get_timestamp, nullable=False)
     updated_at: datetime = Field(default_factory=get_timestamp, nullable=False)
-    phone: Optional[PhoneNumber]
+    phone: PhoneNumber
