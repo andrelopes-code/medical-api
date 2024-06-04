@@ -1,7 +1,8 @@
 import debugpy
 from fastapi import FastAPI
-from app.core import settings
+
 from app.api.v1.routers.configure import main_router
+from app.core import settings
 
 app = FastAPI(title='Medical Appointments', version='0.1.0')
 

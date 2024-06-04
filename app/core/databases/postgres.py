@@ -8,7 +8,7 @@ from app.core import settings
 DATABASE_URI = settings.databases.postgres_uri
 
 # Create the async engine for postgres database connection
-async_engine = create_async_engine(DATABASE_URI, echo=True)
+async_engine = create_async_engine(DATABASE_URI, echo=True, future=True)
 
 # Create a session factory for async sessions
 async_session = async_sessionmaker(bind=async_engine, expire_on_commit=False, class_=AsyncSession)
@@ -20,4 +20,4 @@ async def get_db():
         yield session
 
 
-type AsyncDBSession = Annotated[AsyncSession, Depends(get_db)]
+AsyncDBSession = Annotated[AsyncSession, Depends(get_db)]

@@ -18,7 +18,7 @@ services:
   test:
     build:
       context: .
-      dockerfile: docker/api.dockerfile
+      dockerfile: docker/api_test.dockerfile
     ports:
     - "8001:8000"
     volumes:

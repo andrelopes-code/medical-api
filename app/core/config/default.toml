@@ -1,5 +1,6 @@
 [default]
 DEBUG = true
+API_V1_PREFIX = "/api/v1"
 
 [default.databases]
 postgres_uri = ""

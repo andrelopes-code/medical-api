@@ -21,5 +21,3 @@ RUN pip install poetry && \
 
 RUN chown -R app:app /home/app
 USER app
-
-CMD ["python", "-m", "uvicorn", "app.core.main:app", "--host=0.0.0.0", "--port=8000", "--reload"]
