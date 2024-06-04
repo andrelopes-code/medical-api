@@ -1,4 +1,5 @@
 [default]
+DEBUG = true
 
 [default.databases]
 postgres_uri = ""

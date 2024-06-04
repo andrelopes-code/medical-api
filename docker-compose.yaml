@@ -7,9 +7,25 @@ services:
     - "8000:8000"
     - "5678:5678"
     volumes:
-      - ./app:/home/app/api
+      - .:/home/app/api
     environment:
       - API_DATABASES__POSTGRES_URI=postgresql+asyncpg://postgres:postgres@postgres:5432/medical
+    depends_on:
+      - postgres
+    stdin_open: true
+    tty: true
+
+  test:
+    build:
+      context: .
+      dockerfile: docker/api.dockerfile
+    ports:
+    - "8001:8000"
+    volumes:
+      - .:/home/app/api
+    environment:
+      - API_DATABASES__POSTGRES_URI=postgresql+asyncpg://postgres:postgres@postgres:5432/medical_test
+      - API_ENV = testing
     depends_on:
       - postgres
     stdin_open: true

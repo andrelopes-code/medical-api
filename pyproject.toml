@@ -22,6 +22,8 @@ python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 pyjwt = "^2.8.0"
 pwdlib = {extras = ["argon2"], version = "^0.2.0"}
 loguru = "^0.7.2"
+psycopg2-binary = "^2.9.9"
+phonenumbers = "^8.13.37"
 
 
 [tool.poetry.group.dev.dependencies]
