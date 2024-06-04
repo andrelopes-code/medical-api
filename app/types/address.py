@@ -15,7 +15,6 @@ class AddressCep(str):
 
     @classmethod
     def _validate(cls, cep: str, /) -> str:
-        print(cep)
         import re
 
         is_correct = re.match(r'\d{5}-\d{3}', cep)

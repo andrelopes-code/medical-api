@@ -1,5 +1,6 @@
 [default]
 DEBUG = true
+LOG_LEVEL = "TRACE"
 API_V1_PREFIX = "/api/v1"
 
 [default.databases]
