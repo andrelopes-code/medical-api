@@ -17,7 +17,14 @@ sh:
 	docker compose exec api bash
 
 test:
-	docker compose exec test pytest -vxs
+	docker compose exec test python -m pytest -vxs
+
+cov:
+	docker compose exec test python -m coverage run -m pytest -vxs
+	docker compose exec test python -m coverage html
+
+cov-report:
+	docker compose exec test python -m coverage report
 
 pre-commit:
 	make format
