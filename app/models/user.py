@@ -15,7 +15,7 @@ class User(SQLModel, table=True):
     name: UserName = Field(nullable=False, index=True, sa_type=VARCHAR(255))
     email: EmailStr = Field(nullable=False, unique=True, index=True, sa_type=VARCHAR(255))
     gender: UserGender = Field(nullable=False)
-    hashed_password: UserHashedPassword = Field(nullable=False)
+    password: UserHashedPassword = Field(nullable=False)
     birthdate: datetime
     user_type: UserType
     created_at: datetime = Field(default_factory=get_timestamp, nullable=False)

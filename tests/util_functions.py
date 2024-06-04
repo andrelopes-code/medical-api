@@ -20,6 +20,6 @@ def get_random_user() -> User:
         gender=random_gender,
         phone=f'+55119{random_number}',
         user_type=user_type,
-        hashed_password='DummyPassword321!',
+        password='DummyPassword321!',
         birthdate=datetime.now(),
     )
