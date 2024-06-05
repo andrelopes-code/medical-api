@@ -76,9 +76,7 @@ class AddressFormated(str):
         _source,
         _handler,
     ) -> core_schema.CoreSchema:
-        return core_schema.no_info_after_validator_function(
-            cls._validate, core_schema.str_schema(max_length=255)
-        )
+        return core_schema.no_info_after_validator_function(cls._validate, core_schema.str_schema(max_length=255))
 
     @classmethod
     def _validate(cls, value: str, /) -> str:

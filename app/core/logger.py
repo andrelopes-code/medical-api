@@ -1,5 +1,6 @@
 from loguru import logger
 from rich import print
+
 from app.core import settings
 
 LOG_LEVEL = settings.log_level

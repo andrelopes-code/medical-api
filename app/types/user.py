@@ -1,6 +1,7 @@
 from enum import Enum
 
 from pydantic_core import core_schema
+
 from app.core import logger
 from app.core.security import SecurityManager
 
@@ -74,9 +75,7 @@ class UserPassword(str):
     def _validate(cls, password: str, /) -> str:
         import re
 
-        password_pattern = re.compile(
-            r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_]{8,40}$'
-        )
+        password_pattern = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&_])[A-Za-z\d$@$!%*?&_]{8,40}$')
         is_valid = password_pattern.match(password)
         if not is_valid:
             raise ValueError(

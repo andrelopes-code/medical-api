@@ -28,9 +28,7 @@ def upgrade() -> None:
         sa.Column('email', sa.VARCHAR(length=255), nullable=False),
         sa.Column('gender', sa.Enum('male', 'female', 'other', name='usergender'), nullable=False),
         sa.Column('birthdate', sa.DateTime(), nullable=False),
-        sa.Column(
-            'user_type', sa.Enum('patient', 'doctor', 'admin', name='usertype'), nullable=True
-        ),
+        sa.Column('user_type', sa.Enum('patient', 'doctor', 'admin', name='usertype'), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=False),
         sa.Column('updated_at', sa.DateTime(), nullable=False),
         sa.Column('phone', sqlmodel.sql.sqltypes.AutoString(), nullable=True),

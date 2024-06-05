@@ -22,9 +22,7 @@ async def clear_all_tables(conn):
 @pytest_asyncio.fixture(scope='function')
 async def async_client():
     """Creates an async client to interact with the API"""
-    async with AsyncClient(
-        transport=ASGITransport(app=app), base_url=f'http://{settings.api_v1_prefix}'
-    ) as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url=f'http://{settings.api_v1_prefix}') as client:
         yield client
 
 

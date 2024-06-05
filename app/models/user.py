@@ -7,7 +7,7 @@ from sqlalchemy import VARCHAR
 from sqlmodel import Field, SQLModel
 
 from app.models.utils import get_timestamp
-from app.types.user import UserGender, UserName, UserType, UserHashedPassword
+from app.types.user import UserGender, UserHashedPassword, UserName, UserType
 
 
 class User(SQLModel, table=True):
