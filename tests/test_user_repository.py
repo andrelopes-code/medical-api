@@ -180,6 +180,19 @@ async def test_delete_user_by_email(async_session: AsyncSession):
     assert no_user is None
 
 
+@pytest.mark.asyncio
+async def test_get_all_users(async_session: AsyncSession):
+    repository = UserRepository(async_session)
+
+    users = [get_random_user() for _ in range(10)]
+
+    for user in users:
+        await repository.create_user(user)
+
+    db_users = await repository.get_all_users()
+    assert len(db_users) == len(users)
+
+
 def test_update_models_fields():
     from app.repository.shared_functions import update_model_fields
 

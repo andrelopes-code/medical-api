@@ -17,7 +17,7 @@ class UserRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create_user(self, user: Union[dict, UserCreateRequest]) -> Optional[User]:
+    async def create_user(self, user: Union[dict, UserCreateRequest]) -> User:
         new_user = User.model_validate(user)
         await self._check_email_already_exists(new_user.email)
         self.session.add(new_user)
