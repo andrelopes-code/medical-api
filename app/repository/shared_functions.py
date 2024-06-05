@@ -1,7 +1,9 @@
 import asyncio
-from app.core import logger
-from sqlalchemy.exc import SQLAlchemyError
 import traceback
+
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.core import logger
 from app.core.exceptions import HttpExceptions
 
 

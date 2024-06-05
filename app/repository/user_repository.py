@@ -1,6 +1,5 @@
-from typing import Optional, Union
+from typing import Optional, Sequence, Union
 
-from sqlalchemy import exc
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -25,6 +24,12 @@ class UserRepository:
         await self.session.commit()
         await self.session.refresh(new_user)
         return new_user
+
+    async def get_all_users(self) -> Sequence[User]:
+        stmt = select(User)
+        result = await self.session.scalars(stmt)
+        users = result.all()
+        return users
 
     async def get_user_by_id(self, user_id: int) -> Optional[User]:
         user = await self.session.get(User, user_id)
