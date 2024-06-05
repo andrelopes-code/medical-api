@@ -12,6 +12,7 @@ from . import shared_functions
 from .shared_functions import handle_sqlalchemy_exception
 
 
+@handle_sqlalchemy_exception
 class UserRepository:
 
     def __init__(self, session: AsyncSession):
@@ -20,65 +21,74 @@ class UserRepository:
     async def create_user(self, user: Union[dict, UserCreateRequest]) -> Optional[User]:
         new_user = User.model_validate(user)
         await self._check_email_already_exists(new_user.email)
-        try:
-            self.session.add(new_user)
-            await self.session.commit()
-            await self.session.refresh(new_user)
-            return new_user
-
-        except exc.SQLAlchemyError as e:
-            logger.error('Error creating user: {}', e)
+        self.session.add(new_user)
+        await self.session.commit()
+        await self.session.refresh(new_user)
+        return new_user
 
     async def get_user_by_id(self, user_id: int) -> Optional[User]:
-        try:
-            user = await self.session.get(User, user_id)
-            return user
-        except exc.SQLAlchemyError as e:
-            logger.error('Error getting user: {}', e)
+        user = await self.session.get(User, user_id)
+        return user
 
-    async def get_user_by_email(self, email: str) -> Optional[User]: ...
+    async def get_user_by_email(self, email: str) -> Optional[User]:
+        stmt = select(User).where(User.email == email)
+        user = await self.session.scalar(stmt)
+        return user
 
     async def update_user_by_id(self, user_id: int, data: Union[dict, UserUpdateRequest]) -> Optional[User]:
-        try:
-            user = await self.get_user_by_id(user_id)
-            if not user:
-                return None
-            # Check if email is already in use and raise an error if it is
-            email_in_update = self._get_field('email', data)
-            if email_in_update and email_in_update != self._get_field('email', user):
-                await self._check_email_already_exists(email_in_update)
+        user = await self.get_user_by_id(user_id)
+        if not user:
+            return None
 
-            self._update_user_fields(user, data)
+        email_in_update = self._get_field('email', data)
+        if email_in_update and email_in_update != self._get_field('email', user):
+            await self._check_email_already_exists(email_in_update)
 
-            self.session.add(user)
-            await self.session.commit()
-            await self.session.refresh(user)
-            return user
+        return await self._update_user(user, data)
 
-        except exc.SQLAlchemyError as e:
-            logger.error('Error updating user: {}', e)
+    async def update_user_by_email(self, email: str, data: Union[dict, UserUpdateRequest]) -> Optional[User]:
+        user = await self.get_user_by_email(email)
+        if not user:
+            return None
 
-    async def update_user_by_email(self, email: str, data: Union[dict, UserUpdateRequest]) -> Optional[User]: ...
+        email_in_update = self._get_field('email', data)
+        if email_in_update and email_in_update != self._get_field('email', user):
+            await self._check_email_already_exists(email)
+
+        return await self._update_user(user, data)
 
     async def delete_user_by_id(self, user_id: int) -> Optional[User]:
-        try:
-            user = await self.get_user_by_id(user_id)
-            if not user:
-                return None
+        user = await self.get_user_by_id(user_id)
+        if not user:
+            return None
 
-            await self.session.delete(user)
-            await self.session.commit()
-            return user
-        except exc.SQLAlchemyError as e:
-            logger.error('Error deleting user: {}', e)
+        return await self._delete_user(user)
 
-    async def delete_user_by_email(self, email: str) -> Optional[User]: ...
+    async def delete_user_by_email(self, email: str) -> Optional[User]:
+        user = await self.get_user_by_email(email)
+        if not user:
+            return None
+
+        return await self._delete_user(user)
 
     async def _check_email_already_exists(self, email: str) -> None:
         stmt = select(User).where(User.email == email)
         user = await self.session.scalar(stmt)
         if user:
             raise HttpExceptions.email_already_in_use()
+
+    async def _delete_user(self, user: User) -> User:
+        await self.session.delete(user)
+        await self.session.commit()
+        return user
+
+    async def _update_user(self, user: User, data: any) -> User:
+        self._update_user_fields(user, data)
+
+        self.session.add(user)
+        await self.session.commit()
+        await self.session.refresh(user)
+        return user
 
     def _get_field(self, field_name: str, data: any):
 

@@ -1,5 +1,8 @@
 import asyncio
 from app.core import logger
+from sqlalchemy.exc import SQLAlchemyError
+import traceback
+from app.core.exceptions import HttpExceptions
 
 
 def update_model_fields(model, data):
@@ -14,31 +17,54 @@ def update_model_fields(model, data):
                 setattr(model, field, value)
 
 
-def sqlalchemy_exception_handler(method):
+def exception_handler(
+    method: callable, log_message: str, exception_to_raise: Exception, TargetException: Exception = Exception
+):
 
     async def async_wrapper(self, *args, **kwargs):
         try:
             return await method(self, *args, **kwargs)
-        except Exception as e:
-            logger.error(f'Error executing method [[bold red]{method.__name__}[/bold red]]: {e}')
+        except TargetException as e:
+            self.session.rollback()
+            exception_info = traceback.extract_tb(e.__traceback__)[-1]
+            file = exception_info.filename
+            line = exception_info.lineno
+            module = exception_info.name
+            logger.error(log_message, exc=e, class_and_method=f'{file}:{line}:{module}')
+            raise exception_to_raise
 
     def sync_wrapper(self, *args, **kwargs):
         try:
             return method(self, *args, **kwargs)
-        except Exception as e:
-            logger.error(f'Error executing method [[bold red]{method.__name__}[/bold red]]: {e}')
+        except TargetException as e:
+            self.session.rollback()
+            exception_info = traceback.extract_tb(e.__traceback__)[-1]
+            file = exception_info.filename
+            line = exception_info.lineno
+            module = exception_info.name
+            logger.error(log_message, exc=e, class_and_method=f'{file}:{line}:{module}')
+            raise exception_to_raise
 
-    # Detecta se o método é uma coroutine
-    if asyncio.iscoroutinefunction(method):
-        return async_wrapper
-    else:
-        return sync_wrapper
+    return async_wrapper if asyncio.iscoroutinefunction(method) else sync_wrapper
 
 
 def handle_sqlalchemy_exception(cls):
-    for name in dir(cls):
-        if not name.startswith('__'):
-            method = getattr(cls, name)
+    """This decorator handles SQLAlchemyError exception, logs the error and raises HTTPException 500"""
+    for method_name in dir(cls):
+        if not method_name.startswith('_'):
+            method = getattr(cls, method_name)
             if callable(method):
-                setattr(cls, name, sqlalchemy_exception_handler(method))
+                log_message = 'Error while executing [ [bold blue]{class_and_method}[/bold blue] ]: {exc}'
+                exception_to_raise = HttpExceptions.internal_server_error('An error occurred processing your request')
+
+                setattr(
+                    cls,
+                    method_name,
+                    exception_handler(
+                        method=method,
+                        log_message=log_message,
+                        exception_to_raise=exception_to_raise,
+                        TargetException=SQLAlchemyError,
+                    ),
+                )
     return cls
