@@ -2,6 +2,7 @@ from fastapi import HTTPException, status
 
 
 class HttpExceptions:
+    """A collection of HTTP Exceptions to be used in the project"""
 
     @staticmethod
     def not_found_exception(msg='Not found'):
@@ -22,3 +23,11 @@ class HttpExceptions:
     @staticmethod
     def invalid_credentials(msg='Invalid credentials provided'):
         return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=msg)
+
+    @staticmethod
+    def email_already_in_use(msg='Email already in use'):
+        return HTTPException(status_code=status.HTTP_409_CONFLICT, detail=msg)
+
+    @staticmethod
+    def user_not_found(msg='User not found'):
+        return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=msg)
