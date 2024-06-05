@@ -139,6 +139,47 @@ async def test_user_email_unique_constraint_in_create_and_update(async_session: 
     await repository.update_user_by_id(created_user.id, created_user)
 
 
+@pytest.mark.asyncio
+async def test_get_user_by_email(async_session: AsyncSession):
+    repository = UserRepository(async_session)
+
+    user = get_random_user()
+    created_user = await repository.create_user(user)
+    assert isinstance(created_user, User)
+
+    db_user = await repository.get_user_by_email(created_user.email)
+    assert db_user == created_user
+
+
+@pytest.mark.asyncio
+async def test_update_user_by_email(async_session: AsyncSession):
+    repository = UserRepository(async_session)
+
+    user = get_random_user()
+    created_user = await repository.create_user(user)
+    assert isinstance(created_user, User)
+
+    created_user.email = 'fazzuser@email.com'
+
+    db_user = await repository.update_user_by_email(created_user.email, created_user)
+    assert db_user.email == 'fazzuser@email.com'
+
+
+@pytest.mark.asyncio
+async def test_delete_user_by_email(async_session: AsyncSession):
+    repository = UserRepository(async_session)
+
+    user = get_random_user()
+    created_user = await repository.create_user(user)
+    assert isinstance(created_user, User)
+
+    db_user = await repository.delete_user_by_email(created_user.email)
+    assert db_user == created_user
+
+    no_user = await repository.get_user_by_email(created_user.email)
+    assert no_user is None
+
+
 def test_update_models_fields():
     from app.repository.shared_functions import update_model_fields
 
