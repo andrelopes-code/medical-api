@@ -1,10 +1,10 @@
 from datetime import datetime
 
 import pytest
-from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from util_functions import get_random_user
 
+from app.core.exceptions import EmailAlreadyInUse
 from app.core.security import SecurityManager
 from app.models.user import User
 from app.repository.user_repository import UserRepository
@@ -129,7 +129,7 @@ async def test_user_email_unique_constraint_in_create_and_update(async_session: 
     # Update the user with the same email
     await repository.update_user_by_id(original_user.id, original)
 
-    with pytest.raises(HTTPException, match='Email already in use'):
+    with pytest.raises(EmailAlreadyInUse):
         await repository.create_user(same_email)
 
     some_user = get_random_user()

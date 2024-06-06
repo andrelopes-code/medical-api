@@ -3,15 +3,14 @@ from typing import Optional, Sequence, Union
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from app.core import HttpExceptions, logger
+from app.core import logger
+from app.core.exceptions import EmailAlreadyInUse, UnexpectedError
 from app.models.user import User
 from app.schemas.user_schemas import UserCreateRequest, UserUpdateRequest
 
 from . import shared_functions
-from .shared_functions import handle_sqlalchemy_exception
 
 
-@handle_sqlalchemy_exception
 class UserRepository:
 
     def __init__(self, session: AsyncSession):
@@ -80,7 +79,7 @@ class UserRepository:
         stmt = select(User).where(User.email == email)
         user = await self.session.scalar(stmt)
         if user:
-            raise HttpExceptions.email_already_in_use()
+            raise EmailAlreadyInUse
 
     async def _delete_user(self, user: User) -> User:
         await self.session.delete(user)
@@ -111,4 +110,4 @@ class UserRepository:
             shared_functions.update_model_fields(model, data)
         except Exception as e:
             logger.error('Error updating user fields: {}', e)
-            raise HttpExceptions.internal_server_error('Update operation failed')
+            raise UnexpectedError(e)

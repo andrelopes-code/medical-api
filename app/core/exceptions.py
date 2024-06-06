@@ -31,3 +31,15 @@ class HttpExceptions:
     @staticmethod
     def user_not_found(msg='User not found'):
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=msg)
+
+    @staticmethod
+    def unexpected_error(msg='An unexpected error occurred'):
+        return HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=msg)
+
+
+class EmailAlreadyInUse(Exception):
+    pass
+
+
+class UnexpectedError(Exception):
+    pass
