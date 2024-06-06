@@ -5,7 +5,7 @@ class HttpExceptions:
     """A collection of HTTP Exceptions to be used in the project"""
 
     @staticmethod
-    def not_found_exception(msg='Not found'):
+    def not_found(msg='Not found'):
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=msg)
 
     @staticmethod
@@ -13,7 +13,7 @@ class HttpExceptions:
         return HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=msg)
 
     @staticmethod
-    def bad_request_exception(msg='Bad request'):
+    def bad_request(msg='Bad request'):
         return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=msg)
 
     @staticmethod

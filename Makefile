@@ -16,8 +16,11 @@ down:
 sh:
 	docker compose exec api bash
 
+sh-test:
+	docker compose exec test bash
+
 test:
-	docker compose exec test python -m pytest -vxs
+	docker compose exec test python -m pytest --instafail --show-capture no --no-summary --tb=short -vxs
 
 cov:
 	docker compose exec test python -m coverage run -m pytest -vxs

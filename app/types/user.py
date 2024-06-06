@@ -58,7 +58,7 @@ class UserHashedPassword(str):
             hashed_password = SecurityManager.get_password_hash(password)
             return cls(hashed_password)
         except Exception as e:
-            logger.debug('Error hashing password: {}', e)
+            logger.critical('Error hashing password: {}', e)
 
 
 class UserPassword(str):
@@ -79,7 +79,8 @@ class UserPassword(str):
         is_valid = password_pattern.match(password)
         if not is_valid:
             raise ValueError(
-                'Password must have at least 8 characters (max 40), 1 uppercase, 1 lowercase, 1 number and 1 special character'
+                'Password must have at least 8 characters (max 40)'
+                ', 1 uppercase, 1 lowercase, 1 number and 1 special character'
             )
 
         return cls(password)
