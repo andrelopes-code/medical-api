@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field
 from pydantic_extra_types.phone_numbers import PhoneNumber
@@ -7,7 +8,7 @@ from app.types.user import UserGender, UserName, UserPassword, UserType
 
 
 class UserInDB(BaseModel):
-    id: int
+    id: UUID
     name: str
     email: str
     phone: str
@@ -29,11 +30,11 @@ class UserCreateRequest(BaseModel):
     birthdate: datetime
 
 
-class UserCreateResponse(UserInDB):
+class UserResponseDefault(UserInDB):
 
     # * Excluded fields in the response
     password: str = Field(exclude=True)
-    id: int = Field(exclude=True)
+    id: UUID = Field(exclude=True)
 
 
 class UserUpdateRequest(BaseModel):
