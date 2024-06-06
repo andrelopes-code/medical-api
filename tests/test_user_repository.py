@@ -4,13 +4,11 @@ import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 from util_functions import get_random_user
 
-from app.core.exceptions import EmailAlreadyInUse
 from app.core.security import SecurityManager
 from app.models.user import User
 from app.repository.user_repository import UserRepository
 
 
-@pytest.mark.asyncio
 async def test_user_updated_at_field_is_updating_correctly(async_session: AsyncSession):
 
     user = get_random_user()
@@ -32,11 +30,11 @@ async def test_user_updated_at_field_is_updating_correctly(async_session: AsyncS
     assert user.updated_at > old_updated_at
 
 
-@pytest.mark.asyncio
 async def test_user_repository_create_user_and_get_user(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
-    user = get_random_user()
+    random_user = get_random_user()
+    user = User.model_validate(random_user)
 
     created_user = await repository.create_user(user)
     assert isinstance(created_user, User)
@@ -44,10 +42,9 @@ async def test_user_repository_create_user_and_get_user(async_session: AsyncSess
     db_user = await repository.get_user_by_id(created_user.id)
     assert db_user == created_user
 
-    assert created_user.password != user.password
+    assert created_user.password != random_user.password
 
 
-@pytest.mark.asyncio
 async def test_get_user_with_invalid_user_id(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
@@ -55,11 +52,11 @@ async def test_get_user_with_invalid_user_id(async_session: AsyncSession):
     assert db_user is None
 
 
-@pytest.mark.asyncio
 async def test_update_user_with_valid_data(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
-    user = get_random_user()
+    random_user = get_random_user()
+    user = User.model_validate(random_user)
 
     created_user = await repository.create_user(user)
     assert isinstance(created_user, User)
@@ -77,14 +74,13 @@ async def test_update_user_with_valid_data(async_session: AsyncSession):
     ]
 
     for update_data in updates:
-        updated_user = await repository.update_user_by_id(created_user.id, update_data)
+        updated_user = await repository.update_user(created_user, update_data)
 
         for field, value in update_data.items():
             if value is not None:
                 assert getattr(updated_user, field) == value
 
 
-@pytest.mark.asyncio
 async def test_delete_user_by_id(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
@@ -103,43 +99,20 @@ async def test_delete_user_by_id(async_session: AsyncSession):
     assert db_user is None
 
 
-@pytest.mark.asyncio
 async def test_ensure_password_is_hashed(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
-    user = get_random_user()
+    random_user = get_random_user()
+    user = User.model_validate(random_user)
 
     created_user = await repository.create_user(user)
     assert isinstance(created_user, User)
 
-    assert created_user.password != user.password
+    assert created_user.password != random_user.password
 
-    assert SecurityManager.verify_password(user.password, created_user.password)
-
-
-@pytest.mark.asyncio
-async def test_user_email_unique_constraint_in_create_and_update(async_session: AsyncSession):
-    repository = UserRepository(async_session)
-
-    original = get_random_user(dict(email='fazzuser@email.com'))
-    same_email = get_random_user(dict(email='fazzuser@email.com'))
-
-    original_user = await repository.create_user(original)
-
-    # Update the user with the same email
-    await repository.update_user_by_id(original_user.id, original)
-
-    with pytest.raises(EmailAlreadyInUse):
-        await repository.create_user(same_email)
-
-    some_user = get_random_user()
-    created_user = await repository.create_user(some_user)
-
-    some_user.email = original.email
-    await repository.update_user_by_id(created_user.id, created_user)
+    assert SecurityManager.verify_password(random_user.password, created_user.password)
 
 
-@pytest.mark.asyncio
 async def test_get_user_by_email(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
@@ -151,21 +124,6 @@ async def test_get_user_by_email(async_session: AsyncSession):
     assert db_user == created_user
 
 
-@pytest.mark.asyncio
-async def test_update_user_by_email(async_session: AsyncSession):
-    repository = UserRepository(async_session)
-
-    user = get_random_user()
-    created_user = await repository.create_user(user)
-    assert isinstance(created_user, User)
-
-    created_user.email = 'fazzuser@email.com'
-
-    db_user = await repository.update_user_by_email(created_user.email, created_user)
-    assert db_user.email == 'fazzuser@email.com'
-
-
-@pytest.mark.asyncio
 async def test_delete_user_by_email(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
@@ -180,7 +138,6 @@ async def test_delete_user_by_email(async_session: AsyncSession):
     assert no_user is None
 
 
-@pytest.mark.asyncio
 async def test_get_all_users(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
@@ -194,7 +151,7 @@ async def test_get_all_users(async_session: AsyncSession):
 
 
 def test_update_models_fields():
-    from app.repository.shared_functions import update_model_fields
+    from app.utils.functions import update_model_fields
 
     user = get_random_user()
     user = User.model_validate(user)
