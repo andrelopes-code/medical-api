@@ -16,39 +16,39 @@ class UserRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create_user(self, new_user: User) -> User:
+    async def create(self, new_user: User) -> User:
         self.session.add(new_user)
         await self.session.commit()
         await self.session.refresh(new_user)
         return new_user
 
-    async def get_all_users(self) -> Sequence[User]:
+    async def get_all(self) -> Sequence[User]:
         stmt = select(User)
         result = await self.session.scalars(stmt)
         users = result.all()
         return users
 
-    async def get_user_by_id(self, pk: Union[int, UUID]) -> Optional[User]:
+    async def get_by_id(self, pk: UUID) -> Optional[User]:
         user = await self.session.get(User, pk)
         return user
 
-    async def get_user_by_email(self, email: str) -> Optional[User]:
+    async def get_by_email(self, email: str) -> Optional[User]:
         stmt = select(User).where(User.email == email)
         user = await self.session.scalar(stmt)
         return user
 
-    async def update_user(self, user: User, data: Union[dict, UserUpdateRequest]) -> User:
+    async def update(self, user: User, data: Union[dict, UserUpdateRequest]) -> User:
         return await self._update_user(user, data)
 
-    async def delete_user_by_id(self, pk: Union[int, UUID]) -> Optional[User]:
-        user = await self.get_user_by_id(pk)
+    async def delete_by_id(self, pk: UUID) -> Optional[User]:
+        user = await self.get_by_id(pk)
         if not user:
             return None
 
         return await self._delete_user(user)
 
-    async def delete_user_by_email(self, email: str) -> Optional[User]:
-        user = await self.get_user_by_email(email)
+    async def delete_by_email(self, email: str) -> Optional[User]:
+        user = await self.get_by_email(email)
         if not user:
             return None
 
@@ -75,8 +75,8 @@ class UserRepository:
                     return data.get(field_name)
                 case _:
                     return getattr(data, field_name)
-        except Exception as e:
-            logger.error('Error getting field: {}', e)
+        except Exception:
+            logger.exception('Error getting field: ')
 
     def _update_user_fields(self, model: User, data: Any):
         try:

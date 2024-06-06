@@ -1,4 +1,5 @@
 from typing import Annotated, Union
+from uuid import UUID
 
 from fastapi import Depends
 from pydantic import ValidationError
@@ -23,7 +24,7 @@ class UserService:
         try:
             new_user = User.model_validate(user)
             await self._check_email_already_exists(new_user.email)
-            db_user = await self.repository.create_user(new_user)
+            db_user = await self.repository.create(new_user)
             return db_user
 
         except EmailAlreadyInUse:
@@ -33,35 +34,35 @@ class UserService:
             raise HttpExceptions.bad_request(e.errors())
 
     async def get_all_users(self):
-        return await self.repository.get_all_users()
+        return await self.repository.get_all()
 
-    async def get_user_by_id(self, user_id: int):
-        user = await self.repository.get_user_by_id(user_id)
+    async def get_user_by_id(self, user_id: UUID):
+        user = await self.repository.get_by_id(user_id)
         if not user:
             raise HttpExceptions.user_not_found()
         return user
 
     async def get_user_by_email(self, email: str):
-        user = await self.repository.get_user_by_email(email)
+        user = await self.repository.get_by_email(email)
         if not user:
             raise HttpExceptions.user_not_found()
         return user
 
-    async def delete_user_by_id(self, user_id: int):
-        user = await self.repository.delete_user_by_id(user_id)
+    async def delete_user_by_id(self, user_id: UUID):
+        user = await self.repository.delete_by_id(user_id)
         if not user:
             raise HttpExceptions.user_not_found()
         return user
 
     async def delete_user_by_email(self, email: str):
-        user = await self.repository.delete_user_by_email(email)
+        user = await self.repository.delete_by_email(email)
         if not user:
             raise HttpExceptions.user_not_found()
         return user
 
-    async def update_user_by_id(self, user_id: int, data: Union[dict, UserUpdateRequest]):
+    async def update_user_by_id(self, user_id: UUID, data: Union[dict, UserUpdateRequest]):
         try:
-            user = await self.repository.get_user_by_id(user_id)
+            user = await self.repository.get_by_id(user_id)
             if not user:
                 raise HttpExceptions.user_not_found()
 
@@ -69,7 +70,7 @@ class UserService:
             if email_in_update and email_in_update != self.repository._get_field('email', user):
                 await self._check_email_already_exists(email_in_update)
 
-            updated_user = await self.repository.update_user(user, data)
+            updated_user = await self.repository.update(user, data)
             return updated_user
 
         except EmailAlreadyInUse:
@@ -77,7 +78,7 @@ class UserService:
 
     async def update_user_by_email(self, email: str, data: Union[dict, UserUpdateRequest]):
         try:
-            user = await self.repository.get_user_by_email(email)
+            user = await self.repository.get_by_email(email)
             if not user:
                 raise HttpExceptions.user_not_found()
 
@@ -85,14 +86,14 @@ class UserService:
             if email_in_update and email_in_update != self.repository._get_field('email', user):
                 await self._check_email_already_exists(email_in_update)
 
-            updated_user = await self.repository.update_user(user, data)
+            updated_user = await self.repository.update(user, data)
             return updated_user
 
         except EmailAlreadyInUse:
             raise HttpExceptions.email_already_in_use()
 
     async def _check_email_already_exists(self, email: str) -> None:
-        user = await self.repository.get_user_by_email(email)
+        user = await self.repository.get_by_email(email)
         if user:
             raise EmailAlreadyInUse
 

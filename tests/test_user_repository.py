@@ -35,10 +35,10 @@ async def test_user_repository_create_user_and_get_user(async_session: AsyncSess
     random_user = get_random_user()
     user = User.model_validate(random_user)
 
-    created_user = await repository.create_user(user)
+    created_user = await repository.create(user)
     assert isinstance(created_user, User)
 
-    db_user = await repository.get_user_by_id(created_user.id)
+    db_user = await repository.get_by_id(created_user.id)
     assert db_user == created_user
 
     assert created_user.password != random_user.password
@@ -47,7 +47,7 @@ async def test_user_repository_create_user_and_get_user(async_session: AsyncSess
 async def test_get_user_with_invalid_user_id(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
-    db_user = await repository.get_user_by_id(uuid4())
+    db_user = await repository.get_by_id(uuid4())
     assert db_user is None
 
 
@@ -57,7 +57,7 @@ async def test_update_user_with_valid_data(async_session: AsyncSession):
     random_user = get_random_user()
     user = User.model_validate(random_user)
 
-    created_user = await repository.create_user(user)
+    created_user = await repository.create(user)
     assert isinstance(created_user, User)
 
     updates = [
@@ -72,7 +72,7 @@ async def test_update_user_with_valid_data(async_session: AsyncSession):
     ]
 
     for update_data in updates:
-        updated_user = await repository.update_user(created_user, update_data)
+        updated_user = await repository.update(created_user, update_data)
 
         for field, value in update_data.items():
             if value is not None:
@@ -84,16 +84,16 @@ async def test_delete_user_by_id(async_session: AsyncSession):
 
     user = get_random_user()
 
-    fake_user = await repository.delete_user_by_id(uuid4())
+    fake_user = await repository.delete_by_id(uuid4())
     assert fake_user is None
 
-    created_user = await repository.create_user(user)
+    created_user = await repository.create(user)
     assert isinstance(created_user, User)
 
-    deleted_user = await repository.delete_user_by_id(created_user.id)
+    deleted_user = await repository.delete_by_id(created_user.id)
     assert deleted_user == created_user
 
-    db_user = await repository.get_user_by_id(created_user.id)
+    db_user = await repository.get_by_id(created_user.id)
     assert db_user is None
 
 
@@ -103,7 +103,7 @@ async def test_ensure_password_is_hashed(async_session: AsyncSession):
     random_user = get_random_user()
     user = User.model_validate(random_user)
 
-    created_user = await repository.create_user(user)
+    created_user = await repository.create(user)
     assert isinstance(created_user, User)
 
     assert created_user.password != random_user.password
@@ -115,10 +115,10 @@ async def test_get_user_by_email(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
     user = get_random_user()
-    created_user = await repository.create_user(user)
+    created_user = await repository.create(user)
     assert isinstance(created_user, User)
 
-    db_user = await repository.get_user_by_email(created_user.email)
+    db_user = await repository.get_by_email(created_user.email)
     assert db_user == created_user
 
 
@@ -126,13 +126,13 @@ async def test_delete_user_by_email(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
     user = get_random_user()
-    created_user = await repository.create_user(user)
+    created_user = await repository.create(user)
     assert isinstance(created_user, User)
 
-    db_user = await repository.delete_user_by_email(created_user.email)
+    db_user = await repository.delete_by_email(created_user.email)
     assert db_user == created_user
 
-    no_user = await repository.get_user_by_email(created_user.email)
+    no_user = await repository.get_by_email(created_user.email)
     assert no_user is None
 
 
@@ -142,9 +142,9 @@ async def test_get_all_users(async_session: AsyncSession):
     users = [get_random_user() for _ in range(10)]
 
     for user in users:
-        await repository.create_user(user)
+        await repository.create(user)
 
-    db_users = await repository.get_all_users()
+    db_users = await repository.get_all()
     assert len(db_users) == len(users)
 
 
