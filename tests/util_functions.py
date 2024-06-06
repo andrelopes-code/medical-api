@@ -1,6 +1,6 @@
 import random
 import string
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid1
 
 from app.models import User
@@ -23,7 +23,7 @@ def get_random_user(additional_fields: dict = {}) -> User:
         phone=f'+55119{random_number}',
         user_type=user_type,
         password='DummyPassword321!',
-        birthdate=datetime.now(),
+        birthdate=datetime.now(timezone.utc),
     )
 
     # Update with additional fields if needed

@@ -102,4 +102,4 @@ def get_user_service(session: AsyncDBSession) -> UserService:
     return UserService(session)
 
 
-GetUserService: UserService = Annotated[UserService, Depends(get_user_service)]
+GetUserService = Annotated[UserService, Depends(get_user_service)]

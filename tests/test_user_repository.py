@@ -69,7 +69,6 @@ async def test_update_user_with_valid_data(async_session: AsyncSession):
             email='barbar@outlook.com',
             gender='female',
             user_type='doctor',
-            birthdate=datetime.now(),
         ),
     ]
 
