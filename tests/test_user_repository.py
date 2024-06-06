@@ -1,4 +1,5 @@
 from datetime import datetime
+from uuid import uuid4
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -48,7 +49,7 @@ async def test_user_repository_create_user_and_get_user(async_session: AsyncSess
 async def test_get_user_with_invalid_user_id(async_session: AsyncSession):
     repository = UserRepository(async_session)
 
-    db_user = await repository.get_user_by_id(999)
+    db_user = await repository.get_user_by_id(uuid4())
     assert db_user is None
 
 
@@ -85,7 +86,7 @@ async def test_delete_user_by_id(async_session: AsyncSession):
 
     user = get_random_user()
 
-    fake_user = await repository.delete_user_by_id(999)
+    fake_user = await repository.delete_user_by_id(uuid4())
     assert fake_user is None
 
     created_user = await repository.create_user(user)
