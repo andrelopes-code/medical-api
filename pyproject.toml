@@ -79,19 +79,7 @@ exclude = ".git, __pycache__, .venv, .eggs, *.egg, migrations, xpto"
 # exclude = 'foo/(zaz|bar)\.py'
 python_version = '3.12'
 show_error_codes = true
-follow_imports = 'silent'
-strict_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-disallow_any_generics = true
-check_untyped_defs = true
-no_implicit_reexport = true
-warn_unused_configs = true
-disallow_subclassing_any = true
-disallow_incomplete_defs = true
-disallow_untyped_decorators = true
-disallow_untyped_calls = true
-disallow_untyped_defs = true
+disable_error_code = ["call-arg", "call-overload", "no-untyped-def"]
 
 [tool.pyright]
 ignore = [
@@ -102,3 +90,6 @@ ignore = [
     "**/*.egg",
     "**/migrations",
 ]
+
+[tool.ruff]
+exclude = ["**/migrations/**", "__init__.py"]

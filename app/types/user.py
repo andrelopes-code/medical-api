@@ -52,7 +52,7 @@ class UserHashedPassword(str):
         return core_schema.no_info_after_validator_function(cls._validate, core_schema.str_schema())
 
     @classmethod
-    def _validate(cls, password: str, /) -> str:
+    def _validate(cls, password: str, /):
 
         try:
             hashed_password = SecurityManager.get_password_hash(password)

@@ -1,9 +1,9 @@
 from datetime import datetime
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 
 from pydantic import EmailStr
 from pydantic_extra_types.phone_numbers import PhoneNumber
-from sqlalchemy import VARCHAR, DateTime, UUID as SaUUID
+from sqlalchemy import UUID as SaUUID, VARCHAR, DateTime
 from sqlmodel import Field, SQLModel
 
 from app.models.utils import get_timestamp

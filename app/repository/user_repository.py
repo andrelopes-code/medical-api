@@ -1,4 +1,5 @@
-from typing import Optional, Sequence, Union
+from typing import Any, Optional, Sequence, Union
+from uuid import UUID
 
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -27,8 +28,8 @@ class UserRepository:
         users = result.all()
         return users
 
-    async def get_user_by_id(self, user_id: int) -> Optional[User]:
-        user = await self.session.get(User, user_id)
+    async def get_user_by_id(self, pk: Union[int, UUID]) -> Optional[User]:
+        user = await self.session.get(User, pk)
         return user
 
     async def get_user_by_email(self, email: str) -> Optional[User]:
@@ -39,8 +40,8 @@ class UserRepository:
     async def update_user(self, user: User, data: Union[dict, UserUpdateRequest]) -> User:
         return await self._update_user(user, data)
 
-    async def delete_user_by_id(self, user_id: int) -> Optional[User]:
-        user = await self.get_user_by_id(user_id)
+    async def delete_user_by_id(self, pk: Union[int, UUID]) -> Optional[User]:
+        user = await self.get_user_by_id(pk)
         if not user:
             return None
 
@@ -58,7 +59,7 @@ class UserRepository:
         await self.session.commit()
         return user
 
-    async def _update_user(self, user: User, data: any) -> User:
+    async def _update_user(self, user: User, data: Any) -> User:
         self._update_user_fields(user, data)
 
         self.session.add(user)
@@ -66,7 +67,7 @@ class UserRepository:
         await self.session.refresh(user)
         return user
 
-    def _get_field(self, field_name: str, data: any):
+    def _get_field(self, field_name: str, data: Any):
 
         try:
             match data:
@@ -77,7 +78,7 @@ class UserRepository:
         except Exception as e:
             logger.error('Error getting field: {}', e)
 
-    def _update_user_fields(self, model: User, data: any):
+    def _update_user_fields(self, model: User, data: Any):
         try:
             functions.update_model_fields(model, data)
         except Exception as e:

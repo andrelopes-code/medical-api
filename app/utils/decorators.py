@@ -1,4 +1,5 @@
 import asyncio
+from typing import Callable, Tuple
 
 from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
@@ -7,14 +8,12 @@ from app.core import logger
 from app.core.exceptions import HttpExceptions
 
 
-def __exception_handler(
-    method: callable, log_message: str, exception_to_raise: Exception, TargetException: Exception = Exception
-):
+def __exception_handler(method: Callable, log_message: str, exception_to_raise: Exception, TargetExceptions=Exception):
 
     async def __async_wrapper(self, *args, **kwargs):
         try:
             return await method(self, *args, **kwargs)
-        except TargetException as e:
+        except TargetExceptions as e:
             if e.__class__ == HTTPException:
                 raise
             try:
@@ -27,7 +26,7 @@ def __exception_handler(
     def __sync_wrapper(self, *args, **kwargs):
         try:
             return method(self, *args, **kwargs)
-        except TargetException as e:
+        except TargetExceptions as e:
             if e.__class__ == HTTPException:
                 raise
             try:
@@ -42,8 +41,8 @@ def __exception_handler(
 
 def handle_unexpected_exceptions(
     log_message: str | None = None,
-    target_exceptions: Exception | tuple[Exception] | None = None,
-    exception_to_raise: Exception | None = None,
+    exceptions: Exception | Tuple[Exception] | None = None,
+    exc_to_raise: Exception | None = None,
 ):
     """
     This decorator handles unexpected exceptions
@@ -53,10 +52,9 @@ def handle_unexpected_exceptions(
     """
 
     log_message = log_message or 'Unexpected error occurred: '
-    exception_to_raise = exception_to_raise or HttpExceptions.internal_server_error(
-        'An error occurred processing your request'
-    )
-    target_exceptions = target_exceptions or (SQLAlchemyError, Exception)
+    exc_to_raise = exc_to_raise or HttpExceptions.internal_server_error('An error occurred processing your request')
+
+    target_exceptions = exceptions or (SQLAlchemyError, Exception)
 
     def __handle_unexpected_exceptions(cls):
         """
@@ -74,8 +72,8 @@ def handle_unexpected_exceptions(
                         __exception_handler(
                             method=method,
                             log_message=log_message,
-                            exception_to_raise=exception_to_raise,
-                            TargetException=target_exceptions,
+                            exception_to_raise=exc_to_raise,
+                            TargetExceptions=target_exceptions,
                         ),
                     )
         return cls

@@ -1,7 +1,8 @@
 from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
-from sqlalchemy import VARCHAR, DateTime, UUID as SaUUID
+
+from sqlalchemy import UUID as SaUUID, VARCHAR, DateTime
 from sqlmodel import Field, SQLModel
 
 from app.types.address import AddressCep, AddressFormated, AddressNumber, AddressState

@@ -1,6 +1,6 @@
 import pytest
 from fastapi import HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession
 from util_functions import get_random_user
 
 from app.models.user import User

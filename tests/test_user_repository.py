@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession
 from util_functions import get_random_user
 
 from app.core.security import SecurityManager
