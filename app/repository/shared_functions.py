@@ -70,3 +70,25 @@ def handle_sqlalchemy_exception(cls):
                     ),
                 )
     return cls
+
+
+def handle_unexpected_exceptions(cls):
+    """This decorator handles SQLAlchemyError exception and unexpected exceptions, logs the error and raises HTTPException 500"""
+    for method_name in dir(cls):
+        if not method_name.startswith('_'):
+            method = getattr(cls, method_name)
+            if callable(method):
+                log_message = 'Unexpected error while executing [ [bold blue]{class_and_method}[/bold blue] ]: {exc}'
+                exception_to_raise = HttpExceptions.internal_server_error('An error occurred processing your request')
+
+                setattr(
+                    cls,
+                    method_name,
+                    exception_handler(
+                        method=method,
+                        log_message=log_message,
+                        exception_to_raise=exception_to_raise,
+                        TargetException=(SQLAlchemyError, Exception),
+                    ),
+                )
+    return cls
