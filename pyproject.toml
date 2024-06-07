@@ -25,24 +25,24 @@ loguru = "^0.7.2"
 psycopg2-binary = "^2.9.9"
 phonenumbers = "^8.13.37"
 asyncio = "^3.4.3"
-pytest = "^8.2.1"
-pytest-asyncio = "^0.23.7"
 httpx = "^0.27.0"
-coverage = "^7.5.3"
-
 
 [tool.poetry.group.dev.dependencies]
 debugpy = "^1.8.1"
-pytest = "^8.2.1"
 black = "^24.4.2"
 isort = "^5.13.2"
-pytest-asyncio = "^0.23.7"
-pytest-sugar = "^1.0.0"
-pytest-instafail = "^0.5.0"
 memory-profiler = "^0.61.0"
 flake8 = "^7.0.0"
 mypy = "^1.10.0"
 ipython = "^8.25.0"
+
+[tool.poetry.group.test.dependencies]
+pytest-asyncio = "^0.23.7"
+pytest-sugar = "^1.0.0"
+coverage = "^7.5.3"
+pytest-instafail = "^0.5.0"
+pytest = "^8.2.1"
+
 
 [build-system]
 requires = ["poetry-core"]
@@ -78,7 +78,7 @@ exclude = ".git, __pycache__, .venv, .eggs, *.egg, migrations, xpto"
 [tool.mypy]
 # temporarily ignore some files
 # exclude = 'foo/(zaz|bar)\.py'
-python_version = '^3.12.3'
+python_version = '3.12'
 show_error_codes = true
 disable_error_code = ["call-arg", "call-overload", "no-untyped-def", "name-defined", "type-arg", "valid-type"]
 

@@ -38,6 +38,7 @@ class BaseRepository[T]:
         update(instance: T, data: Union[dict, BaseModel]) -> T:
             Updates an instance of the model with the provided data and returns the updated instance.
     """
+
     def __init__(self, session: AsyncSession, model: 'T'):
         self.session = session
         self.model = model
@@ -108,6 +109,7 @@ class BaseRepositoryWithEmail[T](BaseRepository['T']):
             def __init__(self, session: AsyncSession):
             super().__init__(session, User)
     """
+
     def __init__(self, session: AsyncSession, model: 'T'):
         super().__init__(session, model)
 

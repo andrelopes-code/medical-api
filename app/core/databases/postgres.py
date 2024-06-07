@@ -18,4 +18,4 @@ async def get_db():  # pragma: no cover | function is used in tests
         yield session
 
 
-AsyncDBSession = Annotated[AsyncSession, Depends(get_db)]
+AsyncSessionDepends = Annotated[AsyncSession, Depends(get_db)]

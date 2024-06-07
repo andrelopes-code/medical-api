@@ -6,7 +6,7 @@ from pydantic import ValidationError
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core import logger
-from app.core.databases.postgres import AsyncDBSession
+from app.core.databases.postgres import AsyncSessionDepends
 from app.core.exceptions import EmailAlreadyInUse, HttpExceptions
 from app.models.user import User
 from app.repository.user_repository import UserRepository
@@ -110,8 +110,8 @@ class UserService:
 
 
 # * Get User Service instance Dependency
-def get_user_service(session: AsyncDBSession) -> UserService:
+def get_user_service(session: AsyncSessionDepends) -> UserService:
     return UserService(session)
 
 
-GetUserService = Annotated[UserService, Depends(get_user_service)]
+UserServiceDepends = Annotated[UserService, Depends(get_user_service)]

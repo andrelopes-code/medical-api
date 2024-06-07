@@ -26,6 +26,9 @@ cov:
 	docker compose exec test python -m coverage run -m pytest -vxs
 	docker compose exec test python -m coverage html
 
+mypy:
+	mypy . --ignore-missing-imports --no-namespace-packages --cache-fine-grained
+
 cov-report:
 	docker compose exec test python -m coverage report
 

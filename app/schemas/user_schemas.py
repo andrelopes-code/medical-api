@@ -34,7 +34,6 @@ class UserResponseDefault(UserInDB):
 
     # * Excluded fields in the response
     password: str = Field(exclude=True)
-    id: UUID = Field(exclude=True)
 
 
 class UserUpdateRequest(BaseModel):
