@@ -8,8 +8,7 @@ from app.core import settings
 
 DATABASE_URI = settings.databases.postgres_uri
 
-async_engine = create_async_engine(DATABASE_URI, future=True)
-
+async_engine = create_async_engine(DATABASE_URI, future=True, pool_size=10, max_overflow=10)
 sessionmaker = async_sessionmaker(bind=async_engine, expire_on_commit=False, class_=AsyncSession)
 
 

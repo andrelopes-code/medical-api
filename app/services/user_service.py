@@ -9,7 +9,7 @@ from app.core import logger
 from app.core.databases.postgres import AsyncSessionDepends
 from app.core.exceptions import EmailAlreadyInUse, HttpExceptions
 from app.models.user import User
-from app.repository.user_repository import UserRepository
+from app.repositories.user_repository import UserRepository
 from app.schemas.user_schemas import UserCreateRequest, UserUpdateRequest
 from app.utils.decorators import handle_unexpected_exceptions
 

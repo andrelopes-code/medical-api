@@ -2,11 +2,9 @@ from uuid import UUID
 
 from fastapi import APIRouter, status
 
+from app.core.security.auth import AuthenticatedUserDepends
 from app.schemas.user_schemas import UserCreateRequest, UserResponseDefault, UserUpdateRequest
 from app.services.user_service import UserServiceDepends
-
-
-from app.core.security import AuthenticatedUserDepends
 
 router = APIRouter(dependencies=[AuthenticatedUserDepends])
 
