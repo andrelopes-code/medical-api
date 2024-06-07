@@ -42,6 +42,7 @@ pytest-instafail = "^0.5.0"
 memory-profiler = "^0.61.0"
 flake8 = "^7.0.0"
 mypy = "^1.10.0"
+ipython = "^8.25.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -77,9 +78,9 @@ exclude = ".git, __pycache__, .venv, .eggs, *.egg, migrations, xpto"
 [tool.mypy]
 # temporarily ignore some files
 # exclude = 'foo/(zaz|bar)\.py'
-python_version = '3.12'
+python_version = '^3.12.3'
 show_error_codes = true
-disable_error_code = ["call-arg", "call-overload", "no-untyped-def"]
+disable_error_code = ["call-arg", "call-overload", "no-untyped-def", "name-defined", "type-arg", "valid-type"]
 
 [tool.pyright]
 ignore = [

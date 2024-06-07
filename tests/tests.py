@@ -1,5 +1,5 @@
 import pytest
-from sqlalchemy.ext.asyncio.session import AsyncSession
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.core.databases.postgres import get_db
 
