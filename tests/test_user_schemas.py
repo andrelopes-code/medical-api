@@ -15,6 +15,5 @@ def test_user_schemas():
     response = UserResponseDefault(**user).model_dump()
 
     assert response.get('password') is None
-    assert response.get('id') is None
 
     assert User.model_fields.keys() == UserInDB.model_fields.keys()

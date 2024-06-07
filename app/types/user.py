@@ -3,7 +3,6 @@ from enum import Enum
 from pydantic_core import core_schema
 
 from app.core import logger
-from app.core.security import SecurityManager
 
 
 class UserType(str, Enum):
@@ -53,9 +52,10 @@ class UserHashedPassword(str):
 
     @classmethod
     def _validate(cls, password: str, /):
+        from app.core.security import SecurityService
 
         try:
-            hashed_password = SecurityManager.get_password_hash(password)
+            hashed_password = SecurityService.get_password_hash(password)
             return cls(hashed_password)
         except Exception as e:
             logger.critical('Error hashing password: {}', e)

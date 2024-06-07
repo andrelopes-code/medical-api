@@ -18,7 +18,7 @@ class HttpExceptions:
 
     @staticmethod
     def invalid_token(msg='Invalid token or expired token was provided'):
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=msg)
+        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=msg, headers={"WWW-Authenticate": "Bearer"})
 
     @staticmethod
     def invalid_credentials(msg='Invalid credentials provided'):

@@ -3,7 +3,7 @@ from uuid import uuid4
 from sqlmodel.ext.asyncio.session import AsyncSession
 from util_functions import get_random_user
 
-from app.core.security import SecurityManager
+from app.core.security import SecurityService
 from app.models.user import User
 from app.repository.user_repository import UserRepository
 
@@ -108,7 +108,7 @@ async def test_ensure_password_is_hashed(async_session: AsyncSession):
 
     assert created_user.password != random_user.password
 
-    assert SecurityManager.verify_password(random_user.password, created_user.password)
+    assert SecurityService.verify_password(random_user.password, created_user.password)
 
 
 async def test_get_user_by_email(async_session: AsyncSession):
