@@ -3,9 +3,9 @@ from uuid import uuid4
 from sqlmodel.ext.asyncio.session import AsyncSession
 from util_functions import get_random_user
 
-from app.core.security import SecurityService
+from app.core.security.security import SecurityService
 from app.models.user import User
-from app.repository.user_repository import UserRepository
+from app.repositories.user_repository import UserRepository
 
 
 async def test_user_updated_at_field_is_updating_correctly(async_session: AsyncSession):

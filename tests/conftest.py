@@ -29,11 +29,12 @@ async def async_client():
 async def async_session():
     """Creates an async session for testing purposes and clears all tables after each test"""
     session = sessionmaker(async_engine, expire_on_commit=False, class_=AsyncSession)
+    try:
+        async with session() as sess:
+            yield sess
 
-    async with session() as sess:
-        yield sess
+        async with async_engine.begin() as conn:
+            await clear_all_tables(conn)
 
-    async with async_engine.begin() as conn:
-        await clear_all_tables(conn)
-
-    await async_engine.dispose()
+    finally:
+        await async_engine.dispose()

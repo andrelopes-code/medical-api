@@ -1,7 +1,7 @@
 import pytest
 from fastapi import HTTPException
 
-from app.core.security import SecurityService
+from app.core.security.security import SecurityService
 
 
 def test_access_token_creation_and_verification():
