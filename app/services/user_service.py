@@ -5,6 +5,7 @@ from fastapi import Depends
 from pydantic import ValidationError
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.core import logger
 from app.core.databases.postgres import AsyncDBSession
 from app.core.exceptions import EmailAlreadyInUse, HttpExceptions
 from app.models.user import User
@@ -66,8 +67,8 @@ class UserService:
             if not user:
                 raise HttpExceptions.user_not_found()
 
-            email_in_update = self.repository._get_field('email', data)
-            if email_in_update and email_in_update != self.repository._get_field('email', user):
+            email_in_update = self._get_field('email', data)
+            if email_in_update and email_in_update != self._get_field('email', user):
                 await self._check_email_already_exists(email_in_update)
 
             updated_user = await self.repository.update(user, data)
@@ -82,8 +83,8 @@ class UserService:
             if not user:
                 raise HttpExceptions.user_not_found()
 
-            email_in_update = self.repository._get_field('email', data)
-            if email_in_update and email_in_update != self.repository._get_field('email', user):
+            email_in_update = self._get_field('email', data)
+            if email_in_update and email_in_update != self._get_field('email', user):
                 await self._check_email_already_exists(email_in_update)
 
             updated_user = await self.repository.update(user, data)
@@ -96,6 +97,16 @@ class UserService:
         user = await self.repository.get_by_email(email)
         if user:
             raise EmailAlreadyInUse
+
+    def _get_field(self, field_name: str, data: Union[dict, UserUpdateRequest]):
+        try:
+            match data:
+                case dict():
+                    return data.get(field_name)
+                case _:
+                    return getattr(data, field_name)
+        except Exception:
+            logger.exception('Error getting field: ')
 
 
 # * Get User Service instance Dependency
