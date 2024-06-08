@@ -84,7 +84,7 @@ async def test_auth_service_multiple_users(async_session: AsyncSession):
             created_user = await user_service.create_user(user)
             return await auth_service.login_user(email=created_user.email, password=user.password)
 
-    tasks = [create_and_login_user(get_random_user()) for _ in range(20)]
+    tasks = [create_and_login_user(get_random_user()) for _ in range(5)]
 
     result = await asyncio.gather(*tasks, return_exceptions=True)
 

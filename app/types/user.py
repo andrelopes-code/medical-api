@@ -31,7 +31,7 @@ class UserName(str):
         _source,
         _handler,
     ) -> core_schema.CoreSchema:
-        return core_schema.no_info_after_validator_function(cls._validate, core_schema.str_schema())
+        return core_schema.no_info_after_validator_function(cls._validate, core_schema.str_schema(min_length=10))
 
     @classmethod
     def _validate(cls, name: str, /) -> str:

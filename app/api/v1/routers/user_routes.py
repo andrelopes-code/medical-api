@@ -31,3 +31,9 @@ async def get_user_by_id(service: UserServiceDepends, user_id: UUID):
 async def update_user(service: UserServiceDepends, update_data: UserUpdateRequest, user_id: UUID):
     updated_user = await service.update_user_by_id(user_id, update_data)
     return updated_user
+
+
+@router.delete('/user/{user_id}')
+async def delete_user(service: UserServiceDepends, user_id: UUID):
+    deleted_user = await service.delete_user_by_id(user_id)
+    return deleted_user

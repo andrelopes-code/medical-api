@@ -43,6 +43,8 @@ def test_user_name():
     assert user_name.first == first.title()
     assert user_name.last == last.title()
 
+    user_name = UserName('')._validate('')
+
 
 def test_valid_cep_format():
 
