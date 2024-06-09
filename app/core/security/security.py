@@ -16,8 +16,8 @@ PWD_CONTEXT = PasswordHash.recommended()
 
 class TokenData(TypedDict):
     user_id: str
-    username: str
     email: str
+    user_type: str
 
 
 class TokenResponse(TypedDict):
