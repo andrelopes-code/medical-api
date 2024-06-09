@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING, Optional
 from uuid import UUID
+
 from sqlalchemy import UUID as SaUUID, VARCHAR
 from sqlmodel import Field, Relationship, SQLModel
 
 if TYPE_CHECKING:
-    from app.models.user import User
     from app.models.appointment import Appointment
+    from app.models.user import User
 
 
 class Doctor(SQLModel, table=True):
