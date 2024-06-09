@@ -10,6 +10,11 @@ from sqlmodel import Field, Relationship, SQLModel
 from app.models.utils import get_timestamp
 from app.types.user import UserGender, UserHashedPassword, UserName, UserType
 
+if TYPE_CHECKING:
+    from app.models.address import Address
+    from app.models.doctor import Doctor
+    from app.models.patient import Patient
+
 
 if TYPE_CHECKING:
     from app.models.address import Address

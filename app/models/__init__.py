@@ -2,6 +2,9 @@ from sqlalchemy import event
 from sqlmodel import SQLModel
 
 from app.models.address import Address
+from app.models.appointment import Appointment
+from app.models.doctor import Doctor
+from app.models.patient import Patient
 from app.models.user import User
 from app.models.appointment import Appointment
 from app.models.doctor import Doctor

@@ -1,10 +1,9 @@
 import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import delete
-from app.core.databases.postgres import sessionmaker
 
 from app.core import settings
-from app.core.databases.postgres import async_engine
+from app.core.databases.postgres import async_engine, sessionmaker
 from app.core.main import app
 from app.core.security.security import SecurityService
 from app.models import SQLModel

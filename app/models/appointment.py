@@ -1,7 +1,9 @@
-from sqlmodel import Field, Relationship, SQLModel
-from typing import Optional
-from sqlalchemy import VARCHAR, DateTime, TEXT
 from datetime import datetime
+from typing import Optional
+
+from sqlalchemy import TEXT, VARCHAR, DateTime
+from sqlmodel import Field, Relationship, SQLModel
+
 from app.models.doctor import Doctor
 from app.models.patient import Patient
 from app.models.utils import get_timestamp

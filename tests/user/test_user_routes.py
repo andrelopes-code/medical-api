@@ -1,8 +1,9 @@
 from uuid import uuid4
+
 from httpx import AsyncClient
+from util_functions import get_random_user
 
 from app.schemas.user_schemas import UserUpdateRequest
-from util_functions import get_random_user
 
 
 async def test_create_user(async_client: AsyncClient, json_headers, async_session):

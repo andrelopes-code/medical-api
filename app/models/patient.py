@@ -1,14 +1,15 @@
 from datetime import datetime
 from typing import TYPE_CHECKING, Optional
 from uuid import UUID
-from sqlalchemy import VARCHAR, DateTime, UUID as SaUUID
+
+from sqlalchemy import UUID as SaUUID, VARCHAR, DateTime
 from sqlmodel import Field, Relationship, SQLModel
 
 from app.models.utils import get_timestamp
 
 if TYPE_CHECKING:
-    from app.models.user import User
     from app.models.appointment import Appointment
+    from app.models.user import User
 
 
 class Patient(SQLModel, table=True):
