@@ -3,8 +3,9 @@ from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import UUID as SaUUID, VARCHAR, DateTime
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
+from app.models.user import User
 from app.types.address import AddressCep, AddressFormated, AddressNumber, AddressState
 
 
@@ -19,3 +20,5 @@ class Address(SQLModel, table=True):
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), sa_type=DateTime(timezone=True), nullable=False
     )
+
+    user: Optional['User'] = Relationship(back_populates='address')
