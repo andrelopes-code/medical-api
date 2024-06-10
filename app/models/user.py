@@ -16,12 +16,6 @@ if TYPE_CHECKING:
     from app.models.patient import Patient
 
 
-if TYPE_CHECKING:
-    from app.models.address import Address
-    from app.models.doctor import Doctor
-    from app.models.patient import Patient
-
-
 class User(SQLModel, table=True):
     id: UUID = Field(default_factory=uuid4, primary_key=True, sa_type=SaUUID)
     name: UserName = Field(nullable=False, index=True, sa_type=VARCHAR(255))
