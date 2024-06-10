@@ -55,10 +55,10 @@ class BaseRepository[T]:
         instances = scalar_result.all()
         return instances
 
-    async def get_by_id(self, pk: UUID) -> Optional['T']:
+    async def get_by_id(self, pk: UUID | int) -> Optional['T']:
         return await self.session.get(self.model, pk)
 
-    async def delete_by_id(self, pk: UUID) -> Optional['T']:
+    async def delete_by_id(self, pk: UUID | int) -> Optional['T']:
         instance = await self.get_by_id(pk)
         if not instance:
             return None

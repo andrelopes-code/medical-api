@@ -19,5 +19,5 @@ class Appointment(SQLModel, table=True):
     created_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
     updated_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
 
-    doctor: Optional['Doctor'] = Relationship(back_populates='appointments')
-    patient: Optional['Patient'] = Relationship(back_populates='appointments')
+    doctor: Optional['Doctor'] = Relationship()
+    patient: Optional['Patient'] = Relationship()

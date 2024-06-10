@@ -13,10 +13,10 @@ async def clear_all_tables(conn):
     from app.models import Address, Appointment, Doctor, Patient, User
 
     models = [
-        Doctor,
-        Address,
-        Patient,
         Appointment,
+        Doctor,
+        Patient,
+        Address,
         User,
     ]
     for model in models:

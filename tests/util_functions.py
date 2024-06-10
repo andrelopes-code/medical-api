@@ -7,8 +7,14 @@ from app.schemas.user_schemas import UserCreateRequest
 from app.types.user import UserGender, UserType
 
 
-def get_random_user_type() -> dict:
+def get_random_user_type(doctor, patient) -> dict:
     rand_num = random.randint(0, 1)
+
+    if patient:
+        rand_num = 0
+    elif doctor:
+        rand_num = 1
+
     if rand_num == 0:
         return dict(
             cpf=''.join([str(random.randint(0, 9)) for _ in range(11)]),
@@ -24,7 +30,9 @@ def get_random_user_type() -> dict:
         )
 
 
-def get_random_user(additional_fields: dict = {}, /, request=False) -> UserCreateRequest | dict:
+def get_random_user(
+    additional_fields: dict = {}, /, request=False, doctor=False, patient=False
+) -> UserCreateRequest | dict:
 
     # Generate random fields
     random_name = ' '.join([''.join([random.choice(string.ascii_letters) for _ in range(5)]) for _ in range(3)])
@@ -45,7 +53,7 @@ def get_random_user(additional_fields: dict = {}, /, request=False) -> UserCreat
         )
     )
 
-    user_type = get_random_user_type()
+    user_type = get_random_user_type(doctor, patient)
 
     if 'cpf' in user_type:
         user_data['user']['user_type'] = 'patient'

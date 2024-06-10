@@ -1,15 +1,16 @@
-from datetime import datetime, timezone
-import typer
 import asyncio
 import inspect
+from datetime import datetime, timezone
 from functools import wraps
 
+import typer
+
+from app.core.databases.postgres import sessionmaker
 from app.core.security.auth import AuthService
 from app.models.user import User
-from app.schemas.user_schemas import UserCreate
 from app.repositories.user_repository import UserRepository
+from app.schemas.user_schemas import UserCreate
 from app.types.user import UserGender, UserType
-from app.core.databases.postgres import sessionmaker
 
 
 class ATyper(typer.Typer):

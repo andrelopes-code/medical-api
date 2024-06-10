@@ -28,9 +28,9 @@ class User(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
     phone: PhoneNumber
 
-    doctor: Optional['Doctor'] = Relationship(back_populates='user')
-    patient: Optional['Patient'] = Relationship(back_populates='user')
-    address: Optional['Address'] = Relationship(back_populates='user')
+    doctor: Optional['Doctor'] = Relationship(back_populates='user', sa_relationship_kwargs={'lazy': 'selectin'})
+    patient: Optional['Patient'] = Relationship(back_populates='user', sa_relationship_kwargs={'lazy': 'selectin'})
+    address: Optional['Address'] = Relationship(back_populates='user', sa_relationship_kwargs={'lazy': 'selectin'})
 
     @property
     def info(self) -> Union['Doctor', 'Patient']:
