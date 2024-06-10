@@ -43,7 +43,7 @@ class BaseRepository[T]:
         self.session = session
         self.model = model
 
-    async def create(self, instance: 'T') -> 'T':
+    async def save(self, instance: 'T') -> 'T':
         self.session.add(instance)
         await self.session.commit()
         await self.session.refresh(instance)

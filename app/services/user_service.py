@@ -8,9 +8,12 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.core import logger
 from app.core.databases.postgres import AsyncSessionDepends
 from app.core.exceptions import EmailAlreadyInUse, HttpExceptions
+from app.models.doctor import Doctor
+from app.models.patient import Patient
 from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.schemas.user_schemas import UserCreateRequest, UserUpdateRequest
+from app.types.user import UserType
 from app.utils.decorators import handle_unexpected_exceptions
 
 
@@ -21,11 +24,23 @@ class UserService:
         self.session = session
         self.repository = UserRepository(session)
 
-    async def create_user(self, user: Union[dict, UserCreateRequest]):
+    async def create_user(self, create_data: UserCreateRequest):
         try:
-            new_user = User.model_validate(user)
+            user_type = None
+            new_user = User.model_validate(create_data.user)
+
+            # Define the user type, if it was correctly provided
+            if new_user.user_type == UserType.doctor and create_data.doctor:
+                user_type = Doctor.model_validate(create_data.doctor, update={'user_id': new_user.id})
+            elif new_user.user_type == UserType.patient and create_data.patient:
+                user_type = Patient.model_validate(create_data.patient, update={'user_id': new_user.id})
+
+            # If the user type has not been defined, raise an error
+            if not user_type:
+                raise HttpExceptions.missing_data('User type data is missing')
+
             await self._check_email_already_exists(new_user.email)
-            db_user = await self.repository.create(new_user)
+            db_user = await self.repository.create(new_user, user_type)
             return db_user
 
         except EmailAlreadyInUse:

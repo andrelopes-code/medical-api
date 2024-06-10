@@ -6,14 +6,20 @@ from app.core import settings
 from app.core.databases.postgres import async_engine, sessionmaker
 from app.core.main import app
 from app.core.security.security import SecurityService
-from app.models import SQLModel
-
-MODELS = SQLModel.__subclasses__()
 
 
 async def clear_all_tables(conn):
     """This function clears all tables in the database"""
-    for model in MODELS:
+    from app.models import Address, Appointment, Doctor, Patient, User
+
+    models = [
+        Doctor,
+        Address,
+        Patient,
+        Appointment,
+        User,
+    ]
+    for model in models:
         await conn.execute(delete(model))
 
 
@@ -42,10 +48,7 @@ async def async_session():
     try:
         async with sessionmaker() as sess:
             yield sess
-            sess.rollback()
-            sess.expunge_all()
-            sess.close()
-            sess.close_all()
+            await sess.rollback()
 
         async with async_engine.begin() as conn:
             await clear_all_tables(conn)

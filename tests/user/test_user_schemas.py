@@ -12,6 +12,9 @@ def test_user_schemas():
 
     UserCreateRequest(**user)
     UserUpdateRequest(**user)
+
+    user = User.model_validate(user['user']).model_dump()
+
     response = UserResponseDefault(**user).model_dump()
 
     assert response.get('password') is None

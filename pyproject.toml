@@ -48,6 +48,9 @@ pytest = "^8.2.1"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry.scripts]
+medapi = "app.core.cli:app"
+
 [tool.pytest.ini_options]
 testpaths = 'tests'
 xfail_strict = true

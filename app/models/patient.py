@@ -21,4 +21,4 @@ class Patient(SQLModel, table=True):
     sus_card: str = Field(nullable=False, unique=True, sa_type=VARCHAR(15))
 
     user: Optional['User'] = Relationship(back_populates='patient')
-    appointments: Optional[list['Appointment']] = Relationship(back_populates='doctor')
+    appointments: Optional[list['Appointment']] = Relationship(back_populates='patient')

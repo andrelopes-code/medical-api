@@ -43,7 +43,7 @@ async def test_get_user_by_id(async_client: AsyncClient, authorization, async_se
 
     response = await async_client.get(f'/user/{response.json()["id"]}', headers=authorization)
     assert response.status_code == 200
-    assert response.json()['email'] == user['email']
+    assert response.json()['email'] == user['user']['email']
 
 
 async def test_get_inexistent_user(async_client: AsyncClient, authorization, async_session):
@@ -56,7 +56,9 @@ async def test_update_user_by_id(async_client: AsyncClient, authorization, async
     response = await async_client.post('/user', headers=authorization, json=user)
     assert response.status_code == 201
 
-    update_data = UserUpdateRequest(**get_random_user(request=True)).model_dump()
+    update_user_data = get_random_user()
+
+    update_data = dict(name=update_user_data.user.name, email=update_user_data.user.email)
     response = await async_client.patch(f'/user/{response.json()["id"]}', headers=authorization, json=update_data)
     assert response.status_code == 200
     assert response.json()['name'] == update_data['name']
@@ -70,7 +72,7 @@ async def test_update_inexistent_user(async_client: AsyncClient, authorization, 
 
 async def test_invalid_create_user(async_client: AsyncClient, authorization, async_session):
     user = get_random_user(request=True)
-    user['name'] = ''
+    user['user']['name'] = ''
     response = await async_client.post('/user', headers=authorization, json=user)
     assert response.status_code == 422
 

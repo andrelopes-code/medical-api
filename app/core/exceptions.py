@@ -38,6 +38,10 @@ class HttpExceptions:
     def unexpected_error(msg='An unexpected error occurred'):
         return HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=msg)
 
+    @staticmethod
+    def missing_data(msg='Missing data'):
+        return HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=msg)
+
 
 class EmailAlreadyInUse(Exception):
     pass
