@@ -26,6 +26,7 @@ class TokenResponse(TypedDict):
 
 
 class SecurityService:
+    """A class for handling security-related tasks, such as password hashing and token generation."""
 
     @staticmethod
     def create_access_token(data_to_encode: dict) -> str:

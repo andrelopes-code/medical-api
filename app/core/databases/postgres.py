@@ -12,7 +12,8 @@ async_engine = create_async_engine(DATABASE_URI, future=True, pool_size=10, max_
 sessionmaker = async_sessionmaker(bind=async_engine, expire_on_commit=False, class_=AsyncSession)
 
 
-async def get_db():  # pragma: no cover | function is used in tests
+async def get_db():
+    """Creates a new database session and yields it"""
     async with sessionmaker() as session:
         yield session
 

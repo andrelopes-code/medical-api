@@ -48,7 +48,14 @@ def handle_unexpected_exceptions(
     This decorator handles unexpected exceptions
 
     Usage:
-        @handle_unexpected_exceptions() # You have to use parentheses to call the decorator
+    ```python
+    @handle_unexpected_exceptions() # You have to use parentheses to call the decorator
+    class SomeClass:
+
+        # This method will be decorated
+        def method(self):
+            pass
+    ```
     """
 
     log_message = log_message or 'Unexpected error occurred: '

@@ -19,6 +19,7 @@ from app.utils.decorators import handle_unexpected_exceptions
 
 @handle_unexpected_exceptions()
 class UserService:
+    """The `UserService` class defines methods for creating, retrieving, updating, and deleting user data."""
 
     def __init__(self, session: AsyncSession):
         self.session = session

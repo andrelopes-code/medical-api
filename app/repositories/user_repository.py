@@ -10,6 +10,7 @@ from app.repositories.base_repositories import BaseRepository, BaseRepositoryWit
 
 
 class UserRepository(BaseRepositoryWithEmail[User]):
+    """A repository class for basic database operations on `User` instances"""
 
     def __init__(self, session: AsyncSession):
         super().__init__(session, User)
@@ -23,6 +24,7 @@ class UserRepository(BaseRepositoryWithEmail[User]):
 
 
 class AddressRepository(BaseRepository[Address]):
+    """A repository class for basic database operations on `Address` instances"""
 
     def __init__(self, session: AsyncSession):
         super().__init__(session, Address)
