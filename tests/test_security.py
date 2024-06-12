@@ -13,13 +13,13 @@ def test_access_token_creation_and_verification():
     assert access_token
 
     # Valid token
-    data = SecurityService.verify_access_token(access_token)
+    data = SecurityService.verify_token(access_token)
     assert data
     assert data.get('username') == 'test'
 
     # Invalid token
     with pytest.raises(HTTPException):
-        data = SecurityService.verify_access_token('invalid token')
+        data = SecurityService.verify_token('invalid token')
 
 
 def test_password_hashing_and_verification():

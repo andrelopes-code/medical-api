@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 
 from app.core import settings
@@ -13,7 +13,8 @@ from app.repositories.user_repository import UserRepository
 
 class AuthService:
 
-    async def login_user(self, email: str, password: str) -> dict:
+    @staticmethod
+    async def login_user(email: str, password: str) -> dict:
         async with sessionmaker() as session:
             user_repository = UserRepository(session)
 
@@ -28,10 +29,34 @@ class AuthService:
             if not correct_password:
                 raise HttpExceptions.invalid_credentials()
 
-            # Create access token with user data and return it
+            # Create access token and refresh token with user data and return it
             data_to_encode = TokenData(email=user.email, user_id=str(user.id), user_type=user.user_type.value)
-            access_token = SecurityService.create_access_token(data_to_encode=data_to_encode)
-            return TokenResponse(access_token=access_token, token_type='bearer')
+            return AuthService.create_access_and_refresh_token(data_to_encode=data_to_encode)
+
+    @staticmethod
+    def refresh_token(request: Request) -> TokenResponse:
+
+        # Get the refresh token from the Authorization header
+        refresh_token = request.headers.get('Authorization')
+        if not refresh_token:
+            raise HttpExceptions.bad_request('Missing refresh token')
+
+        # Try to decode the refresh token
+        token_data = SecurityService.verify_token(refresh_token.removeprefix('Bearer '))
+
+        # Ensure that the token type is refresh
+        if token_data['type'] != 'refresh':
+            raise HttpExceptions.bad_request('Invalid refresh token')
+
+        # Create new access and refresh tokens with the same user data and return them
+        tokens = AuthService.create_access_and_refresh_token(data_to_encode=token_data)
+        return tokens
+
+    @staticmethod
+    def create_access_and_refresh_token(data_to_encode: TokenData) -> TokenResponse:
+        access_token = SecurityService.create_access_token(data_to_encode=data_to_encode)
+        refresh_token = SecurityService.create_refresh_token(data_to_encode=data_to_encode)
+        return TokenResponse(access_token=access_token, refresh_token=refresh_token, token_type='Bearer')
 
 
 # *** Security Dependencies ***
@@ -40,7 +65,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.security.token_url)
 
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> TokenData:
-    return SecurityService.verify_access_token(token)
+    return SecurityService.verify_token(token)
 
 
 async def get_current_db_user(user: Annotated[TokenData, Depends(get_current_user)]):
