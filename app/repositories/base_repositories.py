@@ -65,6 +65,7 @@ class BaseRepository[T]:
         if not instance:
             return None
 
+        # COM CERTEZA DE QUE ESTÁ CORRETO
         await self.session.delete(instance)
         await self.session.commit()
         return instance

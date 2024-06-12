@@ -9,5 +9,5 @@ main_router = APIRouter(prefix='/api/v1')
 
 # Configure the sub-routers
 main_router.include_router(user_router, tags=['User'])
-main_router.include_router(token_router, tags=['Token'])
+main_router.include_router(token_router, tags=['Auth'])
 main_router.include_router(appointment_router, tags=['Appointment'])

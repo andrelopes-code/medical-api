@@ -33,8 +33,10 @@ class User(SQLModel, table=True):
     address: Optional['Address'] = Relationship(back_populates='user', sa_relationship_kwargs={'lazy': 'selectin'})
 
     @property
-    def info(self) -> Union['Doctor', 'Patient']:
+    def info(self) -> Union['Doctor', 'Patient', None]:
         if self.user_type == UserType.doctor:
             return self.doctor
         elif self.user_type == UserType.patient:
             return self.patient
+
+        return None

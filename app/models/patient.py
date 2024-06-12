@@ -23,14 +23,9 @@ class Patient(SQLModel, table=True):
 
     user: Optional['User'] = Relationship(back_populates='patient', sa_relationship_kwargs={'lazy': 'selectin'})
 
-    __appointments: Optional[list['Appointment']] = None
-
     async def get_appointments(self) -> list['Appointment']:
-        if self.__appointments is None:
-            from app.models.appointment import Appointment
+        from app.models.appointment import Appointment
 
-            async with sessionmaker() as session:
-                appointments = await session.scalars(select(Appointment).where(Appointment.patient_id == self.id))
-                self.__appointments = appointments.all()
-
-        return self.__appointments
+        async with sessionmaker() as session:
+            appointments = await session.scalars(select(Appointment).where(Appointment.patient_id == self.id))
+            return appointments.all()
