@@ -33,7 +33,7 @@ async def get_user_appointments(service: UserServiceDepends, user_id: UUID):
     return appointments
 
 
-@router.post('/appointment')
+@router.post('/appointment', status_code=201)
 async def create_appointment(service: AppointmentServiceDepends, data: AppointmentCreateRequest):
     new_appointment = await service.create_appointment(data)
     return new_appointment

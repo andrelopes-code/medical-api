@@ -32,7 +32,7 @@ class AppointmentService:
         return await self.repository.get_by_id(appo_id)
 
     async def update_appointment_by_id(self, appo_id: int, data: AppointmentUpdateRequest):
-        appointment = self.get_appointment_by_id(appo_id)
+        appointment = await self.get_appointment_by_id(appo_id)
         if not appointment:
             raise HttpExceptions.not_found('Appointment not found')
 

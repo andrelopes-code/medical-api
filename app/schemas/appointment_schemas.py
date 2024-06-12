@@ -16,7 +16,6 @@ class AppointmentCreateRequest(BaseModel):
 
 
 class AppointmentUpdateRequest(BaseModel):
-    description: str
     reason: str
     notes: str | None = None
     date: datetime = Field(gt=min_appointment_date())
