@@ -49,8 +49,10 @@ class BaseRepository[T]:
         await self.session.refresh(instance)
         return instance
 
-    async def get_all(self) -> Sequence['T']:
-        stmt = select(self.model)
+    async def get_all(self, stmt=None) -> Sequence['T']:
+        if not stmt:
+            stmt = select(self.model)
+
         scalar_result = await self.session.scalars(stmt)
         instances = scalar_result.all()
         return instances
@@ -113,8 +115,10 @@ class BaseRepositoryWithEmail[T](BaseRepository['T']):
     def __init__(self, session: AsyncSession, model: 'T'):
         super().__init__(session, model)
 
-    async def get_by_email(self, email: str) -> Optional['T']:
-        stmt = select(self.model).where(self.model.email == email)
+    async def get_by_email(self, email: str, stmt=None) -> Optional['T']:
+        if not stmt:
+            stmt = select(self.model).where(self.model.email == email)
+
         instance = await self.session.scalar(stmt)
         return instance
 
