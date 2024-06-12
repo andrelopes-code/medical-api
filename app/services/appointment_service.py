@@ -1,13 +1,14 @@
 from typing import Annotated
+
 from fastapi import Depends
 from pydantic import ValidationError
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from app.core.databases.postgres import AsyncSessionDepends
 from app.core.exceptions import HttpExceptions
 from app.models.appointment import Appointment
 from app.repositories.appointment_repository import AppointmentRepository
 from app.schemas.appointment_schemas import AppointmentCreateRequest, AppointmentUpdateRequest
-from app.core.databases.postgres import AsyncSessionDepends
 
 
 class AppointmentService:
@@ -47,6 +48,7 @@ class AppointmentService:
         return deleted_appointment
 
 
+# * Get Appointment Service instance Dependency
 async def get_appointment_service(session: AsyncSessionDepends):
     return AppointmentService(session)
 

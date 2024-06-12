@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
+from app.api.v1.routers.appointment_routes import router as appointment_router
 from app.api.v1.routers.token_routes import router as token_router
 from app.api.v1.routers.user_routes import router as user_router
-from app.api.v1.routers.appointment_routes import router as appointment_router
 
 main_router = APIRouter(prefix='/api/v1')
 

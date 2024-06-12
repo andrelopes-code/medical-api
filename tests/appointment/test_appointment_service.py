@@ -1,8 +1,10 @@
-from app.services.appointment_service import AppointmentService
-from app.schemas.appointment_schemas import AppointmentCreateRequest
-from app.services.user_service import UserService
 from datetime import datetime, timedelta, timezone
+
 from util_functions import get_random_user
+
+from app.schemas.appointment_schemas import AppointmentCreateRequest
+from app.services.appointment_service import AppointmentService
+from app.services.user_service import UserService
 
 
 async def test_create_valid_appointment(async_session):
