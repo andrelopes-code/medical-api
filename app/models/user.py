@@ -27,6 +27,7 @@ class User(SQLModel, table=True):
     created_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
     updated_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
     phone: PhoneNumber
+    is_deleted: bool = Field(default=False, nullable=False, index=True)
 
     doctor: Optional['Doctor'] = Relationship(back_populates='user', sa_relationship_kwargs={'lazy': 'selectin'})
     patient: Optional['Patient'] = Relationship(back_populates='user', sa_relationship_kwargs={'lazy': 'selectin'})

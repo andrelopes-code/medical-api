@@ -19,12 +19,7 @@ class UserInDB(BaseModel):
     birthdate: datetime
     created_at: datetime
     updated_at: datetime
-
-
-class UserResponseDefault(UserInDB):
-
-    # * Excluded fields in the response
-    password: str = Field(exclude=True)
+    is_deleted: bool
 
 
 class UserUpdateRequest(BaseModel):
@@ -38,9 +33,21 @@ class DoctorCreate(BaseModel):
     crm: str = Field(pattern=r'^\d{6}-\d{2}\/[A-Z]{2}$')
 
 
+class DoctorResponse(BaseModel):
+    id: int
+    crm: str
+    specialty: str
+
+
 class PatientCreate(BaseModel):
     cpf: str = Field(pattern=r'[0-9]{11}')
     sus_card: str = Field(pattern=r'[0-9]{15}')
+
+
+class PatientResponse(BaseModel):
+    id: int
+    cpf: str
+    sus_card: str
 
 
 class UserCreate(BaseModel):
@@ -57,3 +64,12 @@ class UserCreateRequest(BaseModel):
     user: UserCreate
     doctor: Optional[DoctorCreate] = None
     patient: Optional[PatientCreate] = None
+
+
+class UserResponseDefault(UserInDB):
+
+    # * Excluded fields in the response
+    password: str = Field(exclude=True)
+
+    doctor: Optional[DoctorResponse] = None
+    patient: Optional[PatientResponse] = None

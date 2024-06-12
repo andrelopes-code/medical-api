@@ -20,5 +20,6 @@ class Address(SQLModel, table=True):
     updated_at: datetime = Field(
         default_factory=lambda: datetime.now(timezone.utc), sa_type=DateTime(timezone=True), nullable=False
     )
+    is_deleted: bool = Field(default=False, nullable=False, index=True)
 
     user: Optional['User'] = Relationship(back_populates='address')

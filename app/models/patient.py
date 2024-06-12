@@ -20,6 +20,7 @@ class Patient(SQLModel, table=True):
     updated_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
     cpf: str = Field(nullable=False, unique=True, sa_type=VARCHAR(11))
     sus_card: str = Field(nullable=False, unique=True, sa_type=VARCHAR(15))
+    is_deleted: bool = Field(default=False, nullable=False, index=True)
 
     user: Optional['User'] = Relationship(back_populates='patient', sa_relationship_kwargs={'lazy': 'selectin'})
 

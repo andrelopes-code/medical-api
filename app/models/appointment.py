@@ -18,6 +18,7 @@ class Appointment(SQLModel, table=True):
     date: datetime = Field(nullable=False, index=True, sa_type=DateTime(timezone=True))
     created_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
     updated_at: datetime = Field(default_factory=get_timestamp, sa_type=DateTime(timezone=True), nullable=False)
+    is_deleted: bool = Field(default=False, nullable=False, index=True)
 
     doctor: Optional['Doctor'] = Relationship()
     patient: Optional['Patient'] = Relationship()

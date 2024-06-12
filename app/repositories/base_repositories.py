@@ -50,23 +50,28 @@ class BaseRepository[T]:
         return instance
 
     async def get_all(self, stmt=None) -> Sequence['T']:
-        if not stmt:
+        if stmt is None:
             stmt = select(self.model)
 
+        stmt = stmt.filter(self.model.is_deleted == False)  # noqa
         scalar_result = await self.session.scalars(stmt)
         instances = scalar_result.all()
         return instances
 
     async def get_by_id(self, pk: UUID | int) -> Optional['T']:
-        return await self.session.get(self.model, pk)
+        stmt = select(self.model).filter(self.model.id == pk, self.model.is_deleted == False)  # noqa
+        instance = await self.session.scalar(stmt)
+        return instance
 
     async def delete_by_id(self, pk: UUID | int) -> Optional['T']:
         instance = await self.get_by_id(pk)
         if not instance:
+            print(f'Instance with id {pk} not found')
             return None
 
-        # COM CERTEZA DE QUE ESTÁ CORRETO
-        await self.session.delete(instance)
+        instance.is_deleted = True
+
+        self.session.add(instance)
         await self.session.commit()
         return instance
 
@@ -117,9 +122,10 @@ class BaseRepositoryWithEmail[T](BaseRepository['T']):
         super().__init__(session, model)
 
     async def get_by_email(self, email: str, stmt=None) -> Optional['T']:
-        if not stmt:
+        if stmt is None:
             stmt = select(self.model).where(self.model.email == email)
 
+        stmt = stmt.filter(self.model.is_deleted == False)  # noqa
         instance = await self.session.scalar(stmt)
         return instance
 
@@ -128,6 +134,8 @@ class BaseRepositoryWithEmail[T](BaseRepository['T']):
         if not instance:
             return None
 
-        await self.session.delete(instance)
+        instance.is_deleted = True
+
+        self.session.add(instance)
         await self.session.commit()
         return instance
