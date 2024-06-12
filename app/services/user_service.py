@@ -3,9 +3,8 @@ from uuid import UUID
 
 from fastapi import Depends
 from pydantic import ValidationError
-from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlalchemy.orm import selectinload
+
 from app.core import logger
 from app.core.databases.postgres import AsyncSessionDepends
 from app.core.exceptions import EmailAlreadyInUse, HttpExceptions
@@ -52,8 +51,7 @@ class UserService:
             raise HttpExceptions.bad_request(e.errors())
 
     async def get_all_users(self):
-        stmt = select(User).options(selectinload(User.doctor), selectinload(User.patient))
-        return await self.repository.get_all(stmt)
+        return await self.repository.get_all()
 
     async def get_user_by_id(self, user_id: UUID):
         user = await self.repository.get_by_id(user_id)

@@ -47,7 +47,7 @@ async def get_current_db_user(user: Annotated[TokenData, Depends(get_current_use
     async with sessionmaker() as session:
         user_repository = UserRepository(session)
 
-        db_user = await user_repository.get_by_email(user.email)
+        db_user = await user_repository.get_by_email(user['email'])
         if not db_user:
             raise HttpExceptions.invalid_credentials()
 

@@ -1,4 +1,5 @@
 from uuid import UUID
+
 from fastapi import APIRouter
 
 from app.core.security.auth import AuthenticatedUserDepends

@@ -53,13 +53,13 @@ class BaseRepository[T]:
         if stmt is None:
             stmt = select(self.model)
 
-        stmt = stmt.filter(self.model.is_deleted == False)  # noqa
+        stmt = stmt.filter(~self.model.is_deleted)
         scalar_result = await self.session.scalars(stmt)
         instances = scalar_result.all()
         return instances
 
     async def get_by_id(self, pk: UUID | int) -> Optional['T']:
-        stmt = select(self.model).filter(self.model.id == pk, self.model.is_deleted == False)  # noqa
+        stmt = select(self.model).filter(self.model.id == pk, ~self.model.is_deleted)
         instance = await self.session.scalar(stmt)
         return instance
 
@@ -125,7 +125,7 @@ class BaseRepositoryWithEmail[T](BaseRepository['T']):
         if stmt is None:
             stmt = select(self.model).where(self.model.email == email)
 
-        stmt = stmt.filter(self.model.is_deleted == False)  # noqa
+        stmt = stmt.filter(~self.model.is_deleted)
         instance = await self.session.scalar(stmt)
         return instance
 
