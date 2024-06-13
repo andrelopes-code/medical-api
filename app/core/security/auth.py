@@ -64,7 +64,11 @@ class AuthService:
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=settings.security.token_url)
 
 
-def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> TokenData:
+def get_current_user(request: Request, token: Annotated[str, Depends(oauth2_scheme)]) -> TokenData:
+    # Get the access token from the request if token header is not provided
+    # The Authorization header is used only if the cookie token is not found
+    cookie_token = request.cookies.get('accessToken')
+    token = cookie_token or token
     return SecurityService.verify_token(token)
 
 

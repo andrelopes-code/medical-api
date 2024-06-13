@@ -1,3 +1,4 @@
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -23,3 +24,7 @@ def configure_cors(app):
         allow_methods=methods,
         allow_headers=headers,
     )
+
+
+def configure_middleware(app: FastAPI):
+    configure_cors(app)

@@ -3,10 +3,10 @@ from fastapi import FastAPI
 
 from app.api.v1.routers.configure import main_router
 from app.core import settings
-from app.core.middlewares import configure_cors
+from app.core.middlewares import configure_middleware
 
 app = FastAPI(title='Medical Appointments', version='0.1.0')
-configure_cors(app)
+configure_middleware(app)
 
 if settings.DEBUG:
     debugpy.listen(('0.0.0.0', 5678))
