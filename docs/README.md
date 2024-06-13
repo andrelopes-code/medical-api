@@ -28,4 +28,5 @@ Esta é uma API de Consultas Médicas construída usando FastAPI e Python. Ela u
 - `PATCH /api/v1/appointment/{appointment_id} - Atualizar consulta por ID`
 - `DELETE /api/v1/appointment/{appointment_id} - Excluir consulta por ID`
 - `GET /api/v1/appointment/user/{user_id} - Obter consultas de um usuário`
+# 
 ![Rotas da api](https://github.com/andrelopes-code/medical-api/blob/main/docs/docs.png?raw=true)
